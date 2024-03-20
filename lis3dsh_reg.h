@@ -779,8 +779,7 @@ int32_t lis3dsh_init_set(const stmdev_ctx_t *ctx, lis3dsh_init_t val);
 
 typedef struct
 {
-uint8_t sw_reset           :
-  1; /* Restoring configuration registers */
+  uint8_t sw_reset           : 1; /* Restoring configuration registers */
   uint8_t boot               : 1; /* Restoring calibration parameters */
   uint8_t drdy_xl            : 1; /* Accelerometer data ready */
   uint8_t ovrn_xl            : 1; /* Accelerometer data overrun */
@@ -828,8 +827,7 @@ typedef struct
   uint8_t drdy_xl          : 1; /* Accelerometer data ready */
   uint8_t ovrn_xl          : 1; /* Accelerometer data overrun */
   uint8_t fsm_lc           : 1; /* long counter flag (for both SM) */
-uint8_t fsm_ext_sync     :
-  1; /* Synchronization with ext-host requested */
+  uint8_t fsm_ext_sync     : 1; /* Synchronization with ext-host requested */
   uint8_t fsm1_wait_fsm2   : 1; /* fsm1 wait fsm2 */
   uint8_t fsm2_wait_fsm1   : 1; /* fsm2 wait fsm1 */
   uint8_t fsm1             : 1; /* fsm 1 interrupt event */
