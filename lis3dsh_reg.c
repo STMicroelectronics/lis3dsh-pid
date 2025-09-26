@@ -176,6 +176,9 @@ int32_t lis3dsh_id_get(const stmdev_ctx_t *ctx, lis3dsh_id_t *val)
   int32_t ret;
 
   ret = lis3dsh_read_reg(ctx, LIS3DSH_INFO1, reg, 3);
+
+  if (ret != 0) { return ret; }
+
   val->info1  = reg[0];
   val->info2  = reg[1];
   val->whoami = reg[2];
@@ -223,6 +226,8 @@ int32_t lis3dsh_bus_mode_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG5, (uint8_t *)&ctrl_reg5, 1);
+
+  if (ret != 0) { return ret; }
 
   switch (ctrl_reg5.sim)
   {
@@ -315,16 +320,10 @@ int32_t lis3dsh_status_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = lis3dsh_read_reg(ctx, LIS3DSH_STAT, (uint8_t *)&stat, 1);
+  ret += lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
+  ret += lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG6, (uint8_t *)&ctrl_reg6, 1);
 
-  if (ret == 0)
-  {
-    ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
-  }
-
-  if (ret == 0)
-  {
-    ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG6, (uint8_t *)&ctrl_reg6, 1);
-  }
+  if (ret != 0) { return ret; }
 
   val->sw_reset = ctrl_reg3.strt;
   val->boot     = ctrl_reg6.boot;
@@ -375,6 +374,9 @@ int32_t lis3dsh_interrupt_mode_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
+
+  if (ret != 0) { return ret; }
+
   val->latched = ~(ctrl_reg3.iel);
   val->active_low = ~(ctrl_reg3.iea);
 
@@ -400,6 +402,9 @@ int32_t lis3dsh_pin_int1_route_set(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG1, (uint8_t *)&reg, 5);
+
+  if (ret != 0) { return ret; }
+
   bytecpy((uint8_t *)&ctrl_reg1, &reg[0]);
   bytecpy((uint8_t *)&ctrl_reg2, &reg[1]);
   bytecpy((uint8_t *)&ctrl_reg3, &reg[2]);
@@ -428,10 +433,7 @@ int32_t lis3dsh_pin_int1_route_set(const stmdev_ctx_t *ctx,
   bytecpy(&reg[2], (uint8_t *)&ctrl_reg3);
   bytecpy(&reg[4], (uint8_t *)&ctrl_reg6);
 
-  if (ret == 0)
-  {
-    ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG1, (uint8_t *)&reg, 5);
-  }
+  ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG1, (uint8_t *)&reg, 5);
 
   return ret;
 }
@@ -455,6 +457,9 @@ int32_t lis3dsh_pin_int1_route_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG1, (uint8_t *)&reg, 5);
+
+  if (ret != 0) { return ret; }
+
   bytecpy((uint8_t *)&ctrl_reg1, &reg[0]);
   bytecpy((uint8_t *)&ctrl_reg2, &reg[1]);
   bytecpy((uint8_t *)&ctrl_reg3, &reg[2]);
@@ -502,6 +507,9 @@ int32_t lis3dsh_pin_int2_route_set(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG1, (uint8_t *)&reg, 5);
+
+  if (ret != 0) { return ret; }
+
   bytecpy((uint8_t *)&ctrl_reg1, &reg[0]);
   bytecpy((uint8_t *)&ctrl_reg2, &reg[1]);
   bytecpy((uint8_t *)&ctrl_reg3, &reg[2]);
@@ -525,10 +533,7 @@ int32_t lis3dsh_pin_int2_route_set(const stmdev_ctx_t *ctx,
   bytecpy(&reg[2], (uint8_t *)&ctrl_reg3);
   bytecpy(&reg[4], (uint8_t *)&ctrl_reg6);
 
-  if (ret == 0)
-  {
-    ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG1, (uint8_t *)&reg, 5);
-  }
+  ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG1, (uint8_t *)&reg, 5);
 
   return ret;
 }
@@ -555,6 +560,9 @@ int32_t lis3dsh_pin_int2_route_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG1, (uint8_t *)&reg, 5);
+
+  if (ret != 0) { return ret; }
+
   bytecpy((uint8_t *)&ctrl_reg1, &reg[0]);
   bytecpy((uint8_t *)&ctrl_reg2, &reg[1]);
   bytecpy((uint8_t *)&ctrl_reg3, &reg[2]);
@@ -593,11 +601,9 @@ int32_t lis3dsh_all_sources_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = lis3dsh_read_reg(ctx, LIS3DSH_STAT, (uint8_t *)&stat, 1);
+  ret += lis3dsh_read_reg(ctx, LIS3DSH_FIFO_SRC, (uint8_t *)&fifo_src, 1);
 
-  if (ret == 0)
-  {
-    ret = lis3dsh_read_reg(ctx, LIS3DSH_FIFO_SRC, (uint8_t *)&fifo_src, 1);
-  }
+  if (ret != 0) { return ret; }
 
   val->drdy_xl        = stat.drdy;
   val->ovrn_xl        = stat.dor;
@@ -631,11 +637,7 @@ int32_t lis3dsh_mode_set(const stmdev_ctx_t *ctx, lis3dsh_md_t *val)
   int32_t ret;
 
   ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG4, (uint8_t *)&ctrl_reg4, 1);
-
-  if (ret == 0)
-  {
-    ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG5, (uint8_t *)&ctrl_reg5, 1);
-  }
+  ret += lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG5, (uint8_t *)&ctrl_reg5, 1);
 
   ctrl_reg4.odr = (uint8_t)val->odr;
   ctrl_reg5.fscale = (uint8_t)val->fs;
@@ -668,11 +670,9 @@ int32_t lis3dsh_mode_get(const stmdev_ctx_t *ctx, lis3dsh_md_t *val)
   int32_t ret;
 
   ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG4, (uint8_t *)&ctrl_reg4, 1);
+  ret += lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG5, (uint8_t *)&ctrl_reg5, 1);
 
-  if (ret == 0)
-  {
-    ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG5, (uint8_t *)&ctrl_reg5, 1);
-  }
+  if (ret != 0) { return ret; }
 
   switch (ctrl_reg4.odr)
   {
@@ -768,11 +768,9 @@ int32_t lis3dsh_data_get(const stmdev_ctx_t *ctx, lis3dsh_md_t *md,
   uint8_t i;
   uint8_t j;
   ret = lis3dsh_read_reg(ctx, LIS3DSH_OUT_T, (uint8_t *)&data->heat.raw, 1);
+  ret += lis3dsh_read_reg(ctx, LIS3DSH_OUT_X_L, (uint8_t *)&buff, 6);
 
-  if (ret == 0)
-  {
-    ret = lis3dsh_read_reg(ctx, LIS3DSH_OUT_X_L, (uint8_t *)&buff, 6);
-  }
+  if (ret != 0) { return ret; }
 
   /* temperature conversion */
   data->heat.deg_c = lis3dsh_from_lsb_to_celsius(data->heat.raw);
@@ -860,6 +858,8 @@ int32_t lis3dsh_self_test_get(const stmdev_ctx_t *ctx, lis3dsh_st_t *val)
   int32_t ret;
 
   ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG5, (uint8_t *)&ctrl_reg5, 1);
+
+  if (ret != 0) { return ret; }
 
   switch (ctrl_reg5.st)
   {
