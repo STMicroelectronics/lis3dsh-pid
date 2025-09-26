@@ -265,17 +265,22 @@ int32_t lis3dsh_init_set(const stmdev_ctx_t *ctx, lis3dsh_init_t val)
   lis3dsh_ctrl_reg6_t ctrl_reg6;
   int32_t ret;
 
+  ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
+  ret += lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG4, (uint8_t *)&ctrl_reg4, 1);
+  ret += lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG6, (uint8_t *)&ctrl_reg6, 1);
+
+  if (ret != 0) { return ret; }
 
   switch (val)
   {
     case LIS3DSH_BOOT:
       ctrl_reg6.boot = (uint8_t)val & (uint8_t)LIS3DSH_BOOT;
-      ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
+      ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG6, (uint8_t *)&ctrl_reg6, 1);
       break;
 
     case LIS3DSH_RESET:
       ctrl_reg3.strt = ((uint8_t)val & (uint8_t)LIS3DSH_RESET) >> 1;
-      ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG6, (uint8_t *)&ctrl_reg6, 1);
+      ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
       break;
 
     case LIS3DSH_DRV_RDY:
@@ -296,7 +301,7 @@ int32_t lis3dsh_init_set(const stmdev_ctx_t *ctx, lis3dsh_init_t val)
 
     default:
       ctrl_reg3.strt = ((uint8_t)val & (uint8_t)LIS3DSH_RESET) >> 1;
-      ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG6, (uint8_t *)&ctrl_reg6, 1);
+      ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
       break;
   }
 
