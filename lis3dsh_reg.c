@@ -231,11 +231,11 @@ int32_t lis3dsh_bus_mode_get(const stmdev_ctx_t *ctx,
 
   switch (ctrl_reg5.sim)
   {
-    case LIS3DSH_SEL_BY_HW:
+    case 0x00:
       *val = LIS3DSH_SEL_BY_HW;
       break;
 
-    case LIS3DSH_SPI_3W:
+    case 0x01:
       *val = LIS3DSH_SPI_3W;
       break;
 
@@ -681,43 +681,43 @@ int32_t lis3dsh_mode_get(const stmdev_ctx_t *ctx, lis3dsh_md_t *val)
 
   switch (ctrl_reg4.odr)
   {
-    case LIS3DSH_OFF:
+    case 0x00:
       val->odr = LIS3DSH_OFF;
       break;
 
-    case LIS3DSH_3Hz125:
+    case 0x01:
       val->odr = LIS3DSH_3Hz125;
       break;
 
-    case LIS3DSH_6Hz25:
+    case 0x02:
       val->odr = LIS3DSH_6Hz25;
       break;
 
-    case LIS3DSH_12Hz5:
+    case 0x03:
       val->odr = LIS3DSH_12Hz5;
       break;
 
-    case LIS3DSH_25Hz:
+    case 0x04:
       val->odr = LIS3DSH_25Hz;
       break;
 
-    case LIS3DSH_50Hz:
+    case 0x05:
       val->odr = LIS3DSH_50Hz;
       break;
 
-    case LIS3DSH_100Hz:
+    case 0x06:
       val->odr = LIS3DSH_100Hz;
       break;
 
-    case LIS3DSH_400Hz:
+    case 0x07:
       val->odr = LIS3DSH_400Hz;
       break;
 
-    case LIS3DSH_800Hz:
+    case 0x08:
       val->odr = LIS3DSH_800Hz;
       break;
 
-    case LIS3DSH_1kHz6:
+    case 0x09:
       val->odr = LIS3DSH_1kHz6;
       break;
 
@@ -728,23 +728,23 @@ int32_t lis3dsh_mode_get(const stmdev_ctx_t *ctx, lis3dsh_md_t *val)
 
   switch (ctrl_reg5.fscale)
   {
-    case LIS3DSH_2g:
+    case 0x00:
       val->fs = LIS3DSH_2g;
       break;
 
-    case LIS3DSH_4g:
+    case 0x01:
       val->fs = LIS3DSH_4g;
       break;
 
-    case LIS3DSH_6g:
+    case 0x02:
       val->fs = LIS3DSH_6g;
       break;
 
-    case LIS3DSH_8g:
+    case 0x03:
       val->fs = LIS3DSH_8g;
       break;
 
-    case LIS3DSH_16g:
+    case 0x04:
       val->fs = LIS3DSH_16g;
       break;
 
@@ -868,15 +868,15 @@ int32_t lis3dsh_self_test_get(const stmdev_ctx_t *ctx, lis3dsh_st_t *val)
 
   switch (ctrl_reg5.st)
   {
-    case LIS3DSH_ST_DISABLE:
+    case 0x00:
       *val = LIS3DSH_ST_DISABLE;
       break;
 
-    case LIS3DSH_ST_POSITIVE:
+    case 0x01:
       *val = LIS3DSH_ST_POSITIVE;
       break;
 
-    case LIS3DSH_ST_NEGATIVE:
+    case 0x02:
       *val = LIS3DSH_ST_NEGATIVE;
       break;
 
