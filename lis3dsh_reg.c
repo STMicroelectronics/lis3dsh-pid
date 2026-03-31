@@ -100,7 +100,7 @@ int32_t __weak lis3dsh_write_reg(const stmdev_ctx_t *ctx, uint8_t reg,
   *
   */
 
-static void bytecpy(uint8_t *target, uint8_t *source)
+static void bytecpy(uint8_t *target, const uint8_t *source)
 {
   if ((target != NULL) && (source != NULL))
   {
@@ -347,7 +347,7 @@ int32_t lis3dsh_status_get(const stmdev_ctx_t *ctx,
   *
   */
 int32_t lis3dsh_interrupt_mode_set(const stmdev_ctx_t *ctx,
-                                   lis3dsh_int_mode_t *val)
+                                   const lis3dsh_int_mode_t *val)
 {
   lis3dsh_ctrl_reg3_t ctrl_reg3;
   int32_t ret;
@@ -601,9 +601,9 @@ int32_t lis3dsh_pin_int2_route_get(const stmdev_ctx_t *ctx,
 int32_t lis3dsh_all_sources_get(const stmdev_ctx_t *ctx,
                                 lis3dsh_all_sources_t *val)
 {
-  lis3dsh_fifo_src_t fifo_src;
-  lis3dsh_stat_t stat;
-  int32_t ret;
+  lis3dsh_fifo_src_t fifo_src = {0};
+  lis3dsh_stat_t stat = {0};
+  int32_t ret = 0;
 
   ret = lis3dsh_read_reg(ctx, LIS3DSH_STAT, (uint8_t *)&stat, 1);
   ret += lis3dsh_read_reg(ctx, LIS3DSH_FIFO_SRC, (uint8_t *)&fifo_src, 1);
@@ -764,7 +764,7 @@ int32_t lis3dsh_mode_get(const stmdev_ctx_t *ctx, lis3dsh_md_t *val)
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t lis3dsh_data_get(const stmdev_ctx_t *ctx, lis3dsh_md_t *md,
+int32_t lis3dsh_data_get(const stmdev_ctx_t *ctx, const lis3dsh_md_t *md,
                          lis3dsh_data_t *data)
 {
   uint8_t buff[6];

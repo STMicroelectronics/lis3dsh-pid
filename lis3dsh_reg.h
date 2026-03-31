@@ -114,8 +114,18 @@ typedef struct
   *
   */
 
-typedef int32_t (*stmdev_write_ptr)(void *, uint8_t, const uint8_t *, uint16_t);
-typedef int32_t (*stmdev_read_ptr)(void *, uint8_t, uint8_t *, uint16_t);
+typedef int32_t (*stmdev_write_ptr)(
+    void *handle,
+    uint8_t reg,
+    const uint8_t *buf,
+    uint16_t len);
+
+typedef int32_t (*stmdev_read_ptr)(
+    void *handle,
+    uint8_t reg,
+    uint8_t *buf,
+    uint16_t len);
+
 typedef void (*stmdev_mdelay_ptr)(uint32_t millisec);
 
 typedef struct
@@ -793,7 +803,7 @@ typedef struct
   uint8_t latched    : 1; /* Signals 1 = latched / 0 = pulsed */
 } lis3dsh_int_mode_t;
 int32_t lis3dsh_interrupt_mode_set(const stmdev_ctx_t *ctx,
-                                   lis3dsh_int_mode_t *val);
+                                   const lis3dsh_int_mode_t *val);
 int32_t lis3dsh_interrupt_mode_get(const stmdev_ctx_t *ctx,
                                    lis3dsh_int_mode_t *val);
 
@@ -880,7 +890,8 @@ typedef struct
     int8_t raw;
   } heat;
 } lis3dsh_data_t;
-int32_t lis3dsh_data_get(const stmdev_ctx_t *ctx, lis3dsh_md_t *md,
+int32_t lis3dsh_data_get(const stmdev_ctx_t *ctx,
+                         const lis3dsh_md_t *md,
                          lis3dsh_data_t *data);
 
 typedef enum
