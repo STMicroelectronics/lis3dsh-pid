@@ -195,7 +195,7 @@ int32_t lis3dsh_id_get(const stmdev_ctx_t *ctx, lis3dsh_id_t *val)
   *
   */
 int32_t lis3dsh_bus_mode_set(const stmdev_ctx_t *ctx,
-                             lis3dsh_bus_mode_t *val)
+                             const lis3dsh_bus_mode_t *val)
 {
   lis3dsh_ctrl_reg5_t ctrl_reg5;
   int32_t ret;
@@ -204,7 +204,7 @@ int32_t lis3dsh_bus_mode_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl_reg5.sim = (uint8_t) * val;
+    ctrl_reg5.sim = (uint8_t) *val & 0x01U;
     ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG5, (uint8_t *)&ctrl_reg5, 1);
   }
 
@@ -274,12 +274,12 @@ int32_t lis3dsh_init_set(const stmdev_ctx_t *ctx, lis3dsh_init_t val)
   switch (val)
   {
     case LIS3DSH_BOOT:
-      ctrl_reg6.boot = (uint8_t)val & (uint8_t)LIS3DSH_BOOT;
+      ctrl_reg6.boot = ((uint8_t)val & (uint8_t)LIS3DSH_BOOT) & 0x01U;
       ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG6, (uint8_t *)&ctrl_reg6, 1);
       break;
 
     case LIS3DSH_RESET:
-      ctrl_reg3.strt = ((uint8_t)val & (uint8_t)LIS3DSH_RESET) >> 1;
+      ctrl_reg3.strt = (((uint8_t)val & (uint8_t)LIS3DSH_RESET) >> 1) & 0x01U;
       ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
       break;
 
@@ -300,7 +300,7 @@ int32_t lis3dsh_init_set(const stmdev_ctx_t *ctx, lis3dsh_init_t val)
       break;
 
     default:
-      ctrl_reg3.strt = ((uint8_t)val & (uint8_t)LIS3DSH_RESET) >> 1;
+      ctrl_reg3.strt = (((uint8_t)val & (uint8_t)LIS3DSH_RESET) >> 1) & 0x01U;
       ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
       break;
   }
@@ -644,8 +644,8 @@ int32_t lis3dsh_mode_set(const stmdev_ctx_t *ctx, lis3dsh_md_t *val)
   ret = lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG4, (uint8_t *)&ctrl_reg4, 1);
   ret += lis3dsh_read_reg(ctx, LIS3DSH_CTRL_REG5, (uint8_t *)&ctrl_reg5, 1);
 
-  ctrl_reg4.odr = (uint8_t)val->odr;
-  ctrl_reg5.fscale = (uint8_t)val->fs;
+  ctrl_reg4.odr = (uint8_t)val->odr & 0x0FU;
+  ctrl_reg5.fscale = (uint8_t)val->fs & 0x07U;
 
   if (ret == 0)
   {
@@ -784,8 +784,7 @@ int32_t lis3dsh_data_get(const stmdev_ctx_t *ctx, const lis3dsh_md_t *md,
 
   for (i = 0U; i < 3U; i++)
   {
-    data->xl.raw[i] = (int16_t)buff[j + 1U];
-    data->xl.raw[i] = (data->xl.raw[i] * 256) + (int16_t) buff[j];
+    data->xl.raw[i] = (int16_t)(buff[j] | ((uint16_t)buff[j + 1U] << 8));
     j += 2U;
 
     switch (md->fs)
@@ -842,7 +841,7 @@ int32_t lis3dsh_self_test_set(const stmdev_ctx_t *ctx, lis3dsh_st_t val)
 
   if (ret == 0)
   {
-    ctrl_reg5.st = (uint8_t) val;
+    ctrl_reg5.st = (uint8_t) val & 0x03U;
     ret = lis3dsh_write_reg(ctx, LIS3DSH_CTRL_REG5, (uint8_t *)&ctrl_reg5, 1);
   }
 
